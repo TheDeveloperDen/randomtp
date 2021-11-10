@@ -1,0 +1,16 @@
+tp-cost: 50
+min-x: -50000
+max-x: 50000
+min-z: -50000
+max-z: 50000
+
+messages:
+  prefix: "<gray>[<gradient:#AC5098:#5851BF>RandomTP</gradient>]</gray> "
+  no-permission: "<red>No permission."
+  not-a-player: "<red>Only players can use this command. To teleport a player use /randomtp <player>"
+  unknown-player: "<red>Could not find player <color:#55BEF8>{player}</color>"
+  tp-starting: "Finding a space to teleport you, please wait..."
+  tp-success: "<gray>Teleported to <color:#55BEF8>{location}</gray>!"
+  tp-failed: "<red>Could not find a suitable location to teleport you to"
+  tp-failed-money: "<red>You need at least <color:#55BEF8>{price}</color> to teleport!"
+
