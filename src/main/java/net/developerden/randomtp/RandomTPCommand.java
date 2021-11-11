@@ -46,20 +46,21 @@ public class RandomTPCommand implements TabExecutor {
             lang.send(sender, MessageConfig::unknownPlayer, Maps.of(PLAYER, args[0]));
             return true;
         }
-        if (teleportingSelf && !economy.has(target, configProvider.get().tpCost())) {
-            lang.send(target, MessageConfig::tpFailedMoney, Maps.of(PLAYER, target.getName()));
+        final int cost = configProvider.get().tpCost();
+        if (teleportingSelf && !economy.has(target, cost)) {
+            lang.send(target, MessageConfig::tpFailedMoney, Maps.of(PLAYER, target.getName(), "{price}", cost));
             return true;
         }
 
         if (teleportingSelf) {
-            economy.withdrawPlayer(target, configProvider.get().tpCost());
+            economy.withdrawPlayer(target, cost);
         }
 
         lang.send(sender, MessageConfig::tpStarting, Maps.of(PLAYER, target.getName()));
         teleporter.teleport(target)
                 .exceptionally(e -> {
                     lang.send(target, MessageConfig::tpFailed, Maps.of(PLAYER, target.getName()));
-                    economy.depositPlayer(target, configProvider.get().tpCost());
+                    economy.depositPlayer(target, cost);
                     if (!(e instanceof Teleporter.AllTeleportAttemptsFailedException)) {
                         e.printStackTrace(); // it's an actually serious error and we should log it
                     }
