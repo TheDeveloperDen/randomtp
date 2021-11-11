@@ -15,14 +15,15 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.bristermitten.me/repository/maven-releases/")
     maven("https://repo.bristermitten.me/repository/maven-snapshots/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("com.github.Redempt:RedClaims:298da532bd")
 
-    implementation("me.bristermitten:mittenlib-core:1.0-SNAPSHOT") {
-        exclude("net.kyori")
-    }
+    implementation("me.bristermitten:mittenlib-core:1.0-SNAPSHOT")
     implementation("me.bristermitten:mittenlib-minimessage:1.0-SNAPSHOT")
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:1.0-SNAPSHOT")
 

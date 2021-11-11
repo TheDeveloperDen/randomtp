@@ -2,6 +2,10 @@ name: RandomTP
 version: 1.0
 author: BristerMitten
 main: net.developerden.randomtp.RandomTP
+depend:
+  - Vault
+  - RedClaims
 commands:
   randomtp:
     aliases: [ rtp ]
+

@@ -14,6 +14,7 @@ public class RandomTP extends JavaPlugin {
                 .addModule(new FileWatcherModule())
                 .addConfigModules(RandomTPConfig.CONFIG)
                 .addModule(new MiniMessageModule())
+                .addModule(new HooksModule())
                 .build();
 
 
