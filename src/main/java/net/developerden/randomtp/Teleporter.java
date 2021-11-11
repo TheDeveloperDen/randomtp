@@ -38,7 +38,7 @@ public class Teleporter {
                 .thenApply(c -> c.getChunkSnapshot().getHighestBlockYAt(x & 15, z & 15))
                 .thenApply(y -> new Location(world, x, y, z))
                 .thenCompose(location -> {
-                    if (ClaimMap.getClaim(location) != null) {
+                    if (ClaimMap.getClaim(location) == null) {
                         return CompletableFuture.completedFuture(location);
                     }
                     return findFreeLocation(world, attempts + 1);
