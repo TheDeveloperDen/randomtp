@@ -11,6 +11,6 @@ messages:
   unknown-player: "<red>Could not find player <color:#55BEF8>{player}</color>"
   tp-starting: "Finding a space to teleport you, please wait..."
   tp-success: "<gray>Teleported to <color:#55BEF8>{location}</gray>!"
-  tp-failed: "<red>Could not find a suitable location to teleport you to"
+  tp-failed: "<red>Could not find a suitable location to teleport to"
   tp-failed-money: "<red>You need at least <color:#55BEF8>{price}</color> to teleport!"
 

@@ -12,21 +12,21 @@ import java.util.function.Function;
 
 public class Lang {
     private final LangService langService;
-    private final Provider<MessageConfig> config;
+    private final Provider<RandomTPConfig> config;
 
     @Inject
-    public Lang(LangService langService, Provider<MessageConfig> config) {
+    public Lang(LangService langService, Provider<RandomTPConfig> config) {
         this.langService = langService;
         this.config = config;
     }
 
     public void send(@NotNull CommandSender receiver, @NotNull Function<MessageConfig, LangMessage> langMessage) {
-        final var t = config.get();
+        final var t = config.get().messages();
         langService.send(receiver, langMessage.apply(t), t.prefix());
     }
 
     public void send(@NotNull CommandSender receiver, @NotNull Function<MessageConfig, LangMessage> langMessage, @NotNull Map<String, Object> placeholders) {
-        final var t = config.get();
+        final var t = config.get().messages();
         langService.send(receiver, langMessage.apply(t), placeholders, t.prefix());
     }
 }

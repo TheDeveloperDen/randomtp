@@ -2,3 +2,6 @@ name: RandomTP
 version: 1.0
 author: BristerMitten
 main: net.developerden.randomtp.RandomTP
+commands:
+  randomtp:
+    aliases: [ rtp ]

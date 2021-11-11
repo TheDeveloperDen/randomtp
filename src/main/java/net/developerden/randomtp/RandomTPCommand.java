@@ -1,5 +1,6 @@
 package net.developerden.randomtp;
 
+import me.bristermitten.mittenlib.collections.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,7 +14,6 @@ import java.util.List;
 
 public class RandomTPCommand implements TabExecutor {
     private final Lang lang;
-    @Inject
     private final Teleporter teleporter;
 
     @Inject
@@ -35,10 +35,19 @@ public class RandomTPCommand implements TabExecutor {
 
         Player target = args.length == 0 ? (Player) sender : Bukkit.getPlayer(args[0]);
         if (target == null) {
-            lang.send(sender, MessageConfig::unknownPlayer);
+            lang.send(sender, MessageConfig::unknownPlayer, Maps.of("{player}", args[0]));
             return true;
         }
 
+        lang.send(sender, MessageConfig::tpStarting, Maps.of("{player}", target.getName()));
+        teleporter.teleport(target)
+                .exceptionally(e -> {
+                    lang.send(target, MessageConfig::tpFailed, Maps.of("{player}", target.getName()));
+                    e.printStackTrace();
+                    return null;
+                })
+                .thenAccept(location -> lang.send(target, MessageConfig::tpSuccess,
+                        Maps.of("{location}", location.getX() + ", " + location.getY() + ", " + location.getZ())));
 
         return true;
     }

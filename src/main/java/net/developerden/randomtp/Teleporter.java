@@ -1,6 +1,5 @@
 package net.developerden.randomtp;
 
-import me.bristermitten.mittenlib.util.Unit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -19,8 +18,11 @@ public class Teleporter {
         this.config = config;
     }
 
-    public CompletableFuture<Unit> teleport(@NotNull Player player) {
-        return CompletableFuture.completedFuture(Unit.UNIT);
+    public CompletableFuture<Location> teleport(@NotNull Player player) {
+        return findFreeLocation(player.getWorld())
+                .thenCompose(location ->
+                        player.teleportAsync(location)
+                                .thenApply(v -> location));
     }
 
     private CompletableFuture<Location> findFreeLocation(World world) {
