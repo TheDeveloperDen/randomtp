@@ -31,25 +31,34 @@ public class RandomTPCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        runCommand(sender, args);
+        return true;
+    }
+
+    private void runCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (!sender.hasPermission("devden.randomtp")) {
             lang.send(sender, MessageConfig::noPermission);
-            return true;
+            return;
         }
         final boolean teleportingSelf = args.length == 0;
         if (!(sender instanceof Player) && (teleportingSelf || !sender.hasPermission("devden.randomtp.other"))) {
             lang.send(sender, MessageConfig::notAPlayer);
-            return true;
+            return;
         }
 
         Player target = teleportingSelf ? (Player) sender : Bukkit.getPlayer(args[0]);
         if (target == null) {
             lang.send(sender, MessageConfig::unknownPlayer, Maps.of(PLAYER, args[0]));
-            return true;
+            return;
+        }
+        if (!teleporter.canTeleport(target)) {
+            lang.send(sender, MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
+            return;
         }
         final int cost = configProvider.get().tpCost();
         if (teleportingSelf && !economy.has(target, cost)) {
             lang.send(target, MessageConfig::tpFailedMoney, Maps.of(PLAYER, target.getName(), "{price}", cost));
-            return true;
+            return;
         }
 
         if (teleportingSelf) {
@@ -61,15 +70,15 @@ public class RandomTPCommand implements TabExecutor {
                 .exceptionally(e -> {
                     lang.send(target, MessageConfig::tpFailed, Maps.of(PLAYER, target.getName()));
                     economy.depositPlayer(target, cost);
-                    if (!(e instanceof Teleporter.AllTeleportAttemptsFailedException)) {
+                    if (e instanceof Teleporter.AlreadyTeleportingException) {
+                        lang.send(target, MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
+                    } else if (!(e instanceof Teleporter.AllTeleportAttemptsFailedException)) {
                         e.printStackTrace(); // it's an actually serious error and we should log it
                     }
                     return null;
                 })
                 .thenAccept(location -> lang.send(target, MessageConfig::tpSuccess,
                         Maps.of("{location}", location.getX() + ", " + location.getY() + ", " + location.getZ())));
-
-        return true;
     }
 
     @Override

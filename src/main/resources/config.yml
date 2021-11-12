@@ -13,4 +13,5 @@ messages:
   tp-success: "<gray>Teleported to <color:#55BEF8>{location}</gray>!"
   tp-failed: "<red>Could not find a suitable location to teleport to"
   tp-failed-money: "<red>You need at least <color:#55BEF8>{price}</color> to teleport!"
+  tp-failed-already-teleporting: "<red>Cannot teleport when already teleporting!"
 

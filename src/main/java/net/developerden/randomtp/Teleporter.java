@@ -9,11 +9,15 @@ import redempt.redclaims.claim.ClaimMap;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Teleporter {
     private final Provider<RandomTPConfig> config;
+    private final Set<UUID> teleporting = ConcurrentHashMap.newKeySet();
 
     @Inject
     public Teleporter(Provider<RandomTPConfig> config) {
@@ -21,12 +25,21 @@ public class Teleporter {
     }
 
     public CompletableFuture<Location> teleport(@NotNull Player player) {
+        if (teleporting.contains(player.getUniqueId())) {
+            return CompletableFuture.failedFuture(new AlreadyTeleportingException());
+        }
+        teleporting.add(player.getUniqueId());
         return findFreeLocation(player.getWorld(), 0)
-                .thenCompose(location ->
-                        player.teleportAsync(location)
-                                .thenApply(v -> location));
+                .thenCompose(location -> player.teleportAsync(location)
+                        .thenApply(v -> {
+                            teleporting.remove(player.getUniqueId());
+                            return location;
+                        }));
     }
 
+    public boolean canTeleport(@NotNull Player player) {
+        return !teleporting.contains(player.getUniqueId());
+    }
     private CompletableFuture<Location> findFreeLocation(World world, int attempts) {
         if (attempts >= 50) {
             return CompletableFuture.failedFuture(new AllTeleportAttemptsFailedException());
@@ -55,5 +68,9 @@ public class Teleporter {
     }
 
     public static class AllTeleportAttemptsFailedException extends RuntimeException {
+    }
+
+    public static class AlreadyTeleportingException extends RuntimeException {
+
     }
 }

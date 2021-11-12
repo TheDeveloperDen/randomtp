@@ -27,5 +27,6 @@ public final class RandomTPConfigDTO {
         LangMessage tpSuccess;
         LangMessage tpFailed;
         LangMessage tpFailedMoney;
+        LangMessage tpFailedAlreadyTeleporting;
     }
 }
