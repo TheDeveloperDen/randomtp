@@ -1,6 +1,7 @@
 package net.developerden.randomtp;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -35,8 +36,15 @@ public class Teleporter {
         final int x = current.nextInt(tpConfig.minX(), tpConfig.maxX());
         final int z = current.nextInt(tpConfig.minZ(), tpConfig.maxZ());
         return world.getChunkAtAsync(x >> 4, z >> 4)
-                .thenApply(c -> c.getChunkSnapshot().getHighestBlockYAt(x & 15, z & 15))
-                .thenApply(y -> new Location(world, x, y, z))
+                .thenApply(c -> {
+                    final var chunkSnapshot = c.getChunkSnapshot();
+                    int y = chunkSnapshot.getHighestBlockYAt(x & 15, z & 15);
+                    final Material blockType = chunkSnapshot.getBlockType(x & 15, y, z & 15);
+                    if (!blockType.isBlock()) {
+                        return null;
+                    }
+                    return new Location(world, x, y, z);
+                })
                 .thenCompose(location -> {
                     if (ClaimMap.getClaim(location) == null) {
                         return CompletableFuture.completedFuture(location);
