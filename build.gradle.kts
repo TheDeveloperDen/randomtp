@@ -4,8 +4,12 @@ plugins {
 }
 
 group = "net.developerden"
-version = "1.0-SNAPSHOT"
+version = "1.0.1-SNAPSHOT"
 
+java {
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = targetCompatibility
+}
 
 repositories {
     mavenCentral()
@@ -19,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("com.github.Redempt:RedClaims:298da532bd")
 
@@ -27,8 +31,8 @@ dependencies {
     implementation("me.bristermitten:mittenlib-minimessage:1.0-SNAPSHOT")
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:1.0-SNAPSHOT")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
 tasks.shadowJar {

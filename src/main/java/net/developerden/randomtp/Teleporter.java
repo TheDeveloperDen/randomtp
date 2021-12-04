@@ -40,6 +40,7 @@ public class Teleporter {
     public boolean canTeleport(@NotNull Player player) {
         return !teleporting.contains(player.getUniqueId());
     }
+
     private CompletableFuture<Location> findFreeLocation(World world, int attempts) {
         if (attempts >= 50) {
             return CompletableFuture.failedFuture(new AllTeleportAttemptsFailedException());
@@ -53,7 +54,7 @@ public class Teleporter {
                     final var chunkSnapshot = c.getChunkSnapshot();
                     int y = chunkSnapshot.getHighestBlockYAt(x & 15, z & 15);
                     final Material blockType = chunkSnapshot.getBlockType(x & 15, y, z & 15);
-                    if (!blockType.isBlock()) {
+                    if (!blockType.isBlock() || blockType == Material.WATER || blockType == Material.LAVA) {
                         return null;
                     }
                     return new Location(world, x, y, z);
