@@ -20,12 +20,12 @@ public class Lang {
         this.config = config;
     }
 
-    public void send(@NotNull CommandSender receiver, @NotNull Function<MessageConfig, LangMessage> langMessage) {
+    public void send(@NotNull CommandSender receiver, @NotNull Function<RandomTPConfig.MessageConfig, LangMessage> langMessage) {
         final var t = config.get().messages();
         langService.send(receiver, langMessage.apply(t), t.prefix());
     }
 
-    public void send(@NotNull CommandSender receiver, @NotNull Function<MessageConfig, LangMessage> langMessage, @NotNull Map<String, Object> placeholders) {
+    public void send(@NotNull CommandSender receiver, @NotNull Function<RandomTPConfig.MessageConfig, LangMessage> langMessage, @NotNull Map<String, Object> placeholders) {
         final var t = config.get().messages();
         langService.send(receiver, langMessage.apply(t), placeholders, t.prefix());
     }

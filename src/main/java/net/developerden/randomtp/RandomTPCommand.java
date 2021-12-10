@@ -37,27 +37,27 @@ public class RandomTPCommand implements TabExecutor {
 
     private void runCommand(@NotNull CommandSender sender, @NotNull String[] args) {
         if (!sender.hasPermission("devden.randomtp")) {
-            lang.send(sender, MessageConfig::noPermission);
+            lang.send(sender, RandomTPConfig.MessageConfig::noPermission);
             return;
         }
         final boolean teleportingSelf = args.length == 0;
         if (!(sender instanceof Player) && (teleportingSelf || !sender.hasPermission("devden.randomtp.other"))) {
-            lang.send(sender, MessageConfig::notAPlayer);
+            lang.send(sender, RandomTPConfig.MessageConfig::notAPlayer);
             return;
         }
 
         Player target = teleportingSelf ? (Player) sender : Bukkit.getPlayer(args[0]);
         if (target == null) {
-            lang.send(sender, MessageConfig::unknownPlayer, Maps.of(PLAYER, args[0]));
+            lang.send(sender, RandomTPConfig.MessageConfig::unknownPlayer, Maps.of(PLAYER, args[0]));
             return;
         }
         if (!teleporter.canTeleport(target)) {
-            lang.send(sender, MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
+            lang.send(sender, RandomTPConfig.MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
             return;
         }
         final int cost = configProvider.get().tpCost();
         if (teleportingSelf && !economy.has(target, cost)) {
-            lang.send(target, MessageConfig::tpFailedMoney, Maps.of(PLAYER, target.getName(), "{price}", cost));
+            lang.send(target, RandomTPConfig.MessageConfig::tpFailedMoney, Maps.of(PLAYER, target.getName(), "{price}", cost));
             return;
         }
 
@@ -65,19 +65,19 @@ public class RandomTPCommand implements TabExecutor {
             economy.withdrawPlayer(target, cost);
         }
 
-        lang.send(sender, MessageConfig::tpStarting, Maps.of(PLAYER, target.getName()));
+        lang.send(sender, RandomTPConfig.MessageConfig::tpStarting, Maps.of(PLAYER, target.getName()));
         teleporter.teleport(target)
                 .exceptionally(e -> {
-                    lang.send(target, MessageConfig::tpFailed, Maps.of(PLAYER, target.getName()));
+                    lang.send(target, RandomTPConfig.MessageConfig::tpFailed, Maps.of(PLAYER, target.getName()));
                     economy.depositPlayer(target, cost);
                     if (e instanceof Teleporter.AlreadyTeleportingException) {
-                        lang.send(target, MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
+                        lang.send(target, RandomTPConfig.MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
                     } else if (!(e instanceof Teleporter.AllTeleportAttemptsFailedException)) {
                         e.printStackTrace(); // it's an actually serious error and we should log it
                     }
                     return null;
                 })
-                .thenAccept(location -> lang.send(target, MessageConfig::tpSuccess,
+                .thenAccept(location -> lang.send(target, RandomTPConfig.MessageConfig::tpSuccess,
                         Maps.of("{location}", location.getX() + ", " + location.getY() + ", " + location.getZ())));
     }
 

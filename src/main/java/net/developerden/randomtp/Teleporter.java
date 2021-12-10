@@ -49,15 +49,17 @@ public class Teleporter {
         final RandomTPConfig tpConfig = this.config.get();
         final int x = current.nextInt(tpConfig.minX(), tpConfig.maxX());
         final int z = current.nextInt(tpConfig.minZ(), tpConfig.maxZ());
-        return world.getChunkAtAsync(x >> 4, z >> 4)
+        return world.getChunkAtAsyncUrgently(x >> 4, z >> 4)
                 .thenApply(c -> {
                     final var chunkSnapshot = c.getChunkSnapshot();
-                    int y = chunkSnapshot.getHighestBlockYAt(x & 15, z & 15);
+                    int y = chunkSnapshot.getHighestBlockYAt(x & 15, z & 15) - 1; // subtract 1
+                    // so block checks and stuff work
+
                     final Material blockType = chunkSnapshot.getBlockType(x & 15, y, z & 15);
                     if (!blockType.isBlock() || blockType == Material.WATER || blockType == Material.LAVA) {
                         return null;
                     }
-                    return new Location(world, x, y, z);
+                    return new Location(world, x, y + 1.0, z);
                 })
                 .thenCompose(location -> {
                     if (ClaimMap.getClaim(location) == null) {
