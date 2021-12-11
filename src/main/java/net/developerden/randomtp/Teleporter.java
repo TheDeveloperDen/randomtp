@@ -62,7 +62,7 @@ public class Teleporter {
                     return new Location(world, x, y + 1.0, z);
                 })
                 .thenCompose(location -> {
-                    if (ClaimMap.getClaim(location) == null) {
+                    if (location != null && ClaimMap.getClaim(location) == null) {
                         return CompletableFuture.completedFuture(location);
                     }
                     return findFreeLocation(world, attempts + 1);
