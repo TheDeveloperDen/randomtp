@@ -52,7 +52,7 @@ public class RandomTPCommand implements TabExecutor {
             return;
         }
         if (!teleporter.canTeleport(target)) {
-            lang.send(sender, RandomTPConfig.MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
+            lang.send(target, RandomTPConfig.MessageConfig::tpFailedAlreadyTeleporting, Maps.of(PLAYER, target.getName()));
             return;
         }
         final int cost = configProvider.get().tpCost();
@@ -61,11 +61,9 @@ public class RandomTPCommand implements TabExecutor {
             return;
         }
 
-        if (teleportingSelf) {
-            economy.withdrawPlayer(target, cost);
-        }
+        economy.withdrawPlayer(target, cost);
 
-        lang.send(sender, RandomTPConfig.MessageConfig::tpStarting, Maps.of(PLAYER, target.getName()));
+        lang.send(target, RandomTPConfig.MessageConfig::tpStarting, Maps.of(PLAYER, target.getName()));
         teleporter.teleport(target)
                 .exceptionally(e -> {
                     lang.send(target, RandomTPConfig.MessageConfig::tpFailed, Maps.of(PLAYER, target.getName()));
