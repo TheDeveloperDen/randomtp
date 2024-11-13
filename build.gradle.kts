@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.18-rc3-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("com.github.Redempt:RedClaims:298da532bd")
 
