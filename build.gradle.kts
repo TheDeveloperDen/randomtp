@@ -31,7 +31,7 @@ dependencies {
     implementation("me.bristermitten:mittenlib-minimessage:1.0-SNAPSHOT")
     annotationProcessor("me.bristermitten:mittenlib-annotation-processor:1.0-SNAPSHOT")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.3")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
